@@ -1,0 +1,114 @@
+### Usage
+
+    hisat2 [options]* -x <hisat2-idx> {-1 <m1> -2 <m2> | -U <r> | --sra-acc <SRA accession number>} [-S <hit>]
+
+### Main arguments
+
+    -x <hisat2-idx>
+
+The basename of the index for the reference genome.  The basename is the name of
+any of the index files up to but not including the final `.1.ht2` / etc.
+`hisat2` looks for the specified index first in the current directory,
+then in the directory specified in the `HISAT2_INDEXES` environment variable.
+
+    -1 <m1>
+
+Comma-separated list of files containing mate 1s (filename usually includes
+`_1`), e.g. `-1 flyA_1.fq,flyB_1.fq`.  Sequences specified with this option must
+correspond file-for-file and read-for-read with those specified in `<m2>`. Reads
+may be a mix of different lengths. If `-` is specified, `hisat2` will read the
+mate 1s from the "standard in" or "stdin" filehandle.
+
+    -2 <m2>
+
+Comma-separated list of files containing mate 2s (filename usually includes
+`_2`), e.g. `-2 flyA_2.fq,flyB_2.fq`.  Sequences specified with this option must
+correspond file-for-file and read-for-read with those specified in `<m1>`. Reads
+may be a mix of different lengths. If `-` is specified, `hisat2` will read the
+mate 2s from the "standard in" or "stdin" filehandle.
+
+    -U <r>
+Comma-separated list of files containing unpaired reads to be aligned, e.g.
+`lane1.fq,lane2.fq,lane3.fq,lane4.fq`.  Reads may be a mix of different lengths.
+If `-` is specified, `hisat2` gets the reads from the "standard in" or "stdin"
+filehandle.
+
+    --sra-acc <SRA accession number>
+
+Comma-separated list of SRA accession numbers, e.g. `--sra-acc SRR353653,SRR353654`.
+Information about read types is available at http://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?sp=runinfo&acc=<b>sra-acc</b>&retmode=xml,
+where <b>sra-acc</b> is SRA accession number.  If users run HISAT2 on a computer cluster, it is recommended to disable SRA-related caching (see the instruction at [SRA-MANUAL]).
+
+[SRA-MANUAL]:	     https://github.com/ncbi/sra-tools/wiki/Toolkit-Configuration
+
+    -S <hit>
+
+File to write SAM alignments to.  By default, alignments are written to the
+"standard out" or "stdout" filehandle (i.e. the console).
+
+
+==============================================
+
+Usage:
+
+    hisat2-build [options]* <reference_in> <ht2_base>
+
+### Notes
+    If you use --snp, --ss, and/or --exon, hisat2-build will need about 200GB RAM for the human genome size as index building involves a graph construction. 
+    Otherwise, you will be able to build an index on your desktop with 8GB RAM.
+    
+### Main arguments
+
+A comma-separated list of FASTA files containing the reference sequences to be
+aligned to, or, if `-c` is specified, the sequences
+themselves. E.g., `<reference_in>` might be `chr1.fa,chr2.fa,chrX.fa,chrY.fa`,
+or, if `-c` is specified, this might be
+`GGTCATCCT,ACGGGTCGT,CCGTTCTATGCGGCTTA`.
+
+The basename of the index files to write.  By default, `hisat2-build` writes
+files named `NAME.1.ht2`, `NAME.2.ht2`, `NAME.3.ht2`, `NAME.4.ht2`,
+`NAME.5.ht2`, `NAME.6.ht2`, `NAME.7.ht2`, and `NAME.8.ht2` where `NAME` is `<ht2_base>`.
+
+=================================================
+test example 1
+-----------
+$HISAT2_HOME/hisat2-build $HISAT2_HOME/example/reference/22_20-21M.fa --snp $HISAT2_HOME/example/reference/22_20-21M.snp 22_20-21M_snp
+
+test example 2 -  in the same directory run
+----------
+
+  $HISAT2_HOME/hisat2 -f -x $HISAT2_HOME/example/index/22_20-21M_snp -U $HISAT2_HOME/example/reads/reads_1.fa -S eg1.sam
+
+
+Paired-end example
+------------------
+
+To align paired-end reads included with HISAT2, stay in the same directory and
+run:
+
+    $HISAT2_HOME/hisat2 -f -x $HISAT2_HOME/example/index/22_20-21M_snp -1 $HISAT2_HOME/example/reads/reads_1.fa -2 $HISAT2_HOME/example/reads/reads_2.fa -S eg2.sam
+
+Use `samtools view` to convert the SAM file into a BAM file.  BAM is a the
+binary format corresponding to the SAM text format.  Run:
+
+    samtools view -bS eg2.sam > eg2.bam
+Use `samtools sort` to convert the BAM file to a sorted BAM file. The following command requires samtools version 1.2 or higher.
+
+    samtools sort eg2.bam -o eg2.sorted.bam
+
+We now have a sorted BAM file called `eg2.sorted.bam`. Sorted BAM is a useful
+format because the alignments are (a) compressed, which is convenient for
+long-term storage, and (b) sorted, which is convenient for variant discovery.
+To generate variant calls in VCF format, run:
+
+    samtools mpileup -uf $HISAT2_HOME/example/reference/22_20-21M.fa eg2.sorted.bam | bcftools view -bvcg - > eg2.raw.bcf
+
+Then to view the variants, run:
+
+    bcftools view eg2.raw.bcf
+
+
+
+
+
+

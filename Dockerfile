@@ -11,14 +11,15 @@ RUN \
     libreadline6-dev libssl-dev python-dev python-pip zlib1g-dev && \
   rm -rf /var/lib/apt/lists/*
 
-RUN wget ftp://ftp.ccb.jhu.edu/pub/infphilo/hisat2/downloads/hisat2-2.1.0-Linux_x86_64.zip
+#RUN wget ftp://ftp.ccb.jhu.edu/pub/infphilo/hisat2/downloads/hisat2-2.1.0-Linux_x86_64.zip
 
 RUN \
   wget -c ftp://ftp.ccb.jhu.edu/pub/infphilo/hisat2/downloads/hisat2-2.1.0-source.zip && \
   unzip hisat2-2.1.0-source.zip && \
   cd hisat2-2.1.0 && \
   make && \
-  cp hisat2* /usr/local/bin 
+  cp hisat2* /usr/local/bin  && \
+  rm /hisat2-2.1.0-source.zip
 
 RUN    pip install awscli 
 
@@ -30,7 +31,9 @@ COPY common/container_scripts/runS3OnBatch.sh /usr/local/bin/runS3OnBatch.sh
 COPY common/container_scripts/runLocal.sh /usr/local/bin/runLocal.sh
 COPY runS3Batch_prerun_custom.sh /usr/local/bin/runS3Batch_prerun_custom.sh
 COPY runS3Batch_postrun_custom.sh /usr/local/bin/runS3Batch_postrun_custom.sh
-COPY findIndex.py /usr/local/bin/findIndex.py
+#COPY findIndex.py /usr/local/bin/findIndex.py
+
+ENV HISAT2_HOME /hisat2-2.1.0
 
 RUN chmod ugo+x /usr/local/bin/runS3OnBatch.sh /usr/local/bin/runLocal.sh 
 
