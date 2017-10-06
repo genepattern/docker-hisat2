@@ -31,7 +31,7 @@ COPY common/container_scripts/runS3OnBatch.sh /usr/local/bin/runS3OnBatch.sh
 COPY common/container_scripts/runLocal.sh /usr/local/bin/runLocal.sh
 COPY runS3Batch_prerun_custom.sh /usr/local/bin/runS3Batch_prerun_custom.sh
 COPY runS3Batch_postrun_custom.sh /usr/local/bin/runS3Batch_postrun_custom.sh
-#COPY findIndex.py /usr/local/bin/findIndex.py
+COPY extractIndexIfNecessary.py /usr/local/bin/extractIndexIfNecessary.py
 
 ENV HISAT2_HOME /hisat2-2.1.0
 

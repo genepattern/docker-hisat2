@@ -36,7 +36,7 @@ ls $TASKLIB
 # copy the inputs
 mkdir -p $INPUT_FILES_DIR
 echo "2. PERFORMING aws s3 sync $S3_ROOT$INPUT_FILES_DIR $INPUT_FILES_DIR"
-aws s3 sync $S3_ROOT$INPUT_FILES_DIR $INPUT_FILES_DIR --quiet
+aws s3 sync $S3_ROOT$INPUT_FILES_DIR $INPUT_FILES_DIR 
 ls $INPUT_FILES_DIR
 
 # switch to the working directory and sync it up
