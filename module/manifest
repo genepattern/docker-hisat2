@@ -1,42 +1,85 @@
 #Hisat2Aligner
 #Mon Oct 02 18:40:23 UTC 2017
 JVMLevel=
-LSID=urn\:lsid\:8080.gpserver.ip-172-31-26-71.ip-172-31-26-71.ec2.internal\:genepatternmodules\:22\:26
+LSID=urn\:lsid\:8080.gpserver.ip-172-31-26-71.ip-172-31-26-71.ec2.internal\:genepatternmodules\:22\:27
 author=Ted Liefeld;UCSD
 categories=Sequence Analysis
-commandLine=hisat2 -f -x <index.dir>/<index.file.prefix> <unpaired.input.fasta> <reads.pair.2>  <reads.pair.1>  -S <output.file.name>   \n <max.n.primary.alignments> <write.aligned.reads.to.separate.files> <max.seeds> <write.unaligned.reads.to.separate.files> --n-ceil <function.governing.maximum.number.of.ambiguous.characters>   <Ignore.quality.values> <skip.forward.strand> <skip.reverse.strand> -s<skip.first.n.reads.or.pairs> -u<stop.after.n.reads.or.pairs> <trim.5'.end> <trim.3'.end> <function.governing.minimum.alignment.score> <Maximum.and.minimum.mismatch.penalty> <disallow.soft.clipping> <Maximum.and.minimum.soft.clipping.penalty> <Ambiguous.read.penalty> <read.gap.open.and.extend.penalties> <reference.gap.open.and.extend.penalties> <penalty.for.canonical.splice.sites> <penalty.for.non-canonical.splice.sites> <penalty.function.for.long.introns.with.canonical.splice.sites> <penalty.function.for.long.introns.with.non-canonical.splice.sites> <Minimum.intron.length> <Maximum.intron.length> <Disable.spliced.alignment> <minimum.fragment.length.for.valid.paired-end.alignments> <maximum.fragment.length.for.valid.paired-end.alignments> <disable.finding.alignments.for.individual.mates> <disable.looking.for.discordant.alignments>  <known.splicesite.infile>
+commandLine=python hisat_wrapper.py -f -index <index> -U <unpaired.input.fasta> <reads.pair.2> <mapped.reads> <unmapped.reads> -S <output.prefix>  -k <max.n.primary.alignments>  -min_n_ceil <min_n_ceil>  -max_n_ceil <max_n_ceil>  --max-seeds <max.seeds> <Ignore.quality.values> <skip.forward.strand> <skip.reverse.strand> -s<skip.first.n.reads.or.pairs> -u<stop.after.n.reads.or.pairs> <trim.5'.end> <trim.3'.end> <function.governing.minimum.alignment.score> <Maximum.and.minimum.mismatch.penalty> <disallow.soft.clipping> <Maximum.and.minimum.soft.clipping.penalty> <Ambiguous.read.penalty> <read.gap.open.and.extend.penalties> <reference.gap.open.and.extend.penalties> <penalty.for.canonical.splice.sites> <penalty.for.non-canonical.splice.sites> <penalty.function.for.long.introns.with.canonical.splice.sites> <penalty.function.for.long.introns.with.non-canonical.splice.sites> <Minimum.intron.length> <Maximum.intron.length> <Disable.spliced.alignment> <minimum.fragment.length.for.valid.paired-end.alignments> <maximum.fragment.length.for.valid.paired-end.alignments> <disable.finding.alignments.for.individual.mates> <disable.looking.for.discordant.alignments>  <known.splicesite.infile> <NCBI.sequence.read.archive.accessions>
+
+
+
 cpuType=any
 description=Hisat2 Aligner
 fileFormat=sam
 language=any
 name=Hisat2Aligner
 os=any
+
+
+#<mapped.reads> <unmapped.reads>
+
+p9_MODE=
+p9_TYPE=TEXT
+p9_default_value=\
+p9_description=Write paired-end reads that align concordantly at least once to separate fastq  file(s)
+p9_fileFormat=
+p9_flag=
+p9_name=mapped.reads
+p9_numValues=0..1
+p9_optional=on
+p9_prefix=
+p9_prefix_when_specified=-mapped.reads
+p9_type=java.lang.String
+
+p4_MODE=
+p4_TYPE=TEXT
+p4_default_value=\
+p4_description=Write paired-end reads that do not align concordantly at least once to separate fastq  file(s)
+p4_fileFormat=
+p4_flag=
+p4_name=unmapped.reads
+p4_numValues=0..1
+p4_optional=on
+p4_prefix=
+p4_prefix_when_specified=-unmapped.reads
+p4_type=java.lang.String
+
 p10_MODE=
 p10_TYPE=Integer
-p10_default_value=
+p10_default_value=5
 p10_description=HISAT2, like other aligners, uses seed-and-extend approaches.  HISAT2 tries to extend seeds to full-length alignments. In HISAT2, --max-seeds is used to control the maximum number of seeds that will be extended. HISAT2 extends up to these many seeds and skips the rest of the seeds. Large values for `--max-seeds` may improve alignment sensitivity, but HISAT2 is not designed with large values for `--max-seeds` in mind, and when aligning reads to long, repetitive genomes large `--max-seeds` can be very, very slow. \n
 p10_fileFormat=
-p10_flag=--max-seeds 
 p10_name=max.seeds
-p10_numValues=0..1
-p10_optional=on
-p10_prefix=--max-seeds 
+p10_numValues=1..1
+p10_prefix=
 p10_prefix_when_specified=--max-seeds 
 p10_type=java.lang.Integer
 p10_value=
+
 p11_MODE=
 p11_TYPE=TEXT
-p11_default_value=`L,0,0.15`
+p11_default_value=`.15`
 p11_description=Sets a function governing the maximum number of ambiguous characters (usually `N`s and/or `.`s) allowed in a read as a function of read length.  For instance,\nspecifying `-L,0,0.15` sets the N-ceiling function `f` to `f(x) \= 0 + 0.15 * x`,\nwhere x is the read length.  See also\: [setting function options].  Reads\nexceeding this ceiling are [filtered out].  Default\: `L,0,0.15`.\n`N`s and/or `.`s) allowed in a read as a function of read length.   In these cases the user specifies three parameters\: (a) a function\ntype `F`, (b) a constant term `B`, and (c) a coefficient `A`. For instance,\nspecifying `-L,0,0.15` sets the N-ceiling function `f` to `f(x) \= 0 + 0.15 * x`,\nwhere x is the read length
 p11_fileFormat=
-p11_flag=--n-ceil 
-p11_name=function.governing.maximum.number.of.ambiguous.characters
+p11_name=max_n_ceil
 p11_numValues=1..1
 p11_optional=
 p11_prefix=
-p11_prefix_when_specified=
 p11_type=java.lang.String
 p11_value=
+
+p5_MODE=
+p5_TYPE=TEXT
+p5_default_value=`.15`
+p5_description=Sets a function governing the maximum number of ambiguous characters (usually `N`s and/or `.`s) allowed in a read as a function of read length.  For instance,\nspecifying `-L,0,0.15` sets the N-ceiling function `f` to `f(x) \= 0 + 0.15 * x`,\nwhere x is the read length.  See also\: [setting function options].  Reads\nexceeding this ceiling are [filtered out].  Default\: `L,0,0.15`.\n`N`s and/or `.`s) allowed in a read as a function of read length.   In these cases the user specifies three parameters\: (a) a function\ntype `F`, (b) a constant term `B`, and (c) a coefficient `A`. For instance,\nspecifying `-L,0,0.15` sets the N-ceiling function `f` to `f(x) \= 0 + 0.15 * x`,\nwhere x is the read length
+p5_fileFormat=
+p5_name=min_n_ceil
+p5_numValues=1..1
+p5_optional=
+p5_prefix=
+p5_type=java.lang.String
+p5_value=
+
 p12_MODE=
 p12_TYPE=TEXT
 p12_default_value=
@@ -147,7 +190,7 @@ p1_default_value=
 p1_description=Directory with indices for the alignment
 p1_fileFormat=DIRECTORY
 p1_flag=
-p1_name=index.dir
+p1_name=index
 p1_choiceDir=ftp\://gpftp.broadinstitute.org/module_support_files/hisat2/index/by_genome/
 p1_choiceDirFilter=type\=dir
 p1_numValues=1..1
@@ -286,6 +329,7 @@ p29_prefix=--pen-noncanintronlen
 p29_prefix_when_specified=--pen-noncanintronlen
 p29_type=java.lang.String
 p29_value=
+
 p2_MODE=IN
 p2_TYPE=FILE
 p2_default_value=
@@ -293,12 +337,10 @@ p2_description=
 p2_fileFormat=
 p2_flag=-U 
 p2_name=unpaired.input.fasta
-p2_numValues=0..1
-p2_optional=on
-p2_prefix=-U 
-p2_prefix_when_specified=-U 
+p2_numValues=1..1
 p2_type=java.io.File
 p2_value=
+
 p30_MODE=
 p30_TYPE=Integer
 p30_default_value=
@@ -403,45 +445,38 @@ p37_prefix=\ --known-splicesite-infile
 p37_prefix_when_specified=\ --known-splicesite-infile 
 p37_type=java.io.File
 p37_value=
+
+p38_MODE=
+p38_TYPE=TEXT
+p38_default_value=\ 
+p38_description=Comma-separated list of SRA accession numbers. Uses the NCBI Sequence Red Archive (SRA) directly over the internet for the given SRA Accessions.  
+p38_fileFormat=
+p38_flag=
+p38_name=NCBI.sequence.read.archive.accessions
+p38_numValues=0..1
+p38_optional=
+p38_prefix=
+p38_prefix_when_specified=\ --sra-acc
+p38_type=java.lang.String
+p38_value=
+
 p3_MODE=
 p3_TYPE=TEXT
-p3_default_value=out.sam
+p3_default_value=mapped
 p3_description=
 p3_fileFormat=
 p3_flag=
-p3_name=output.file.name
+p3_name=output.prefix
 p3_numValues=1..1
 p3_optional=
 p3_prefix=
 p3_prefix_when_specified=
 p3_type=java.lang.String
 p3_value=
-p4_MODE=
-p4_TYPE=TEXT
-p4_default_value=genome
-p4_description=For the pre-genrated indices, this will be one of genome, genome_tran, genome_snp or genome_snp_tran according to the selected index. For indices you have generated yourself, this will be the portion of the filename in front of the \".#.ht2\" for the index files.
-p4_fileFormat=
-p4_flag=
-p4_name=index.file.prefix
-p4_numValues=1..1
-p4_optional=
-p4_prefix=
-p4_prefix_when_specified=
-p4_type=java.lang.String
-p4_value=
-p5_MODE=IN
-p5_TYPE=FILE
-p5_default_value=
-p5_description=
-p5_fileFormat=
-p5_flag=-1 
-p5_name=reads.pair.1
-p5_numValues=0..1
-p5_optional=on
-p5_prefix=-1 
-p5_prefix_when_specified=-1 
-p5_type=java.io.File
-p5_value=
+
+
+
+
 p6_MODE=IN
 p6_TYPE=FILE
 p6_default_value=
@@ -455,45 +490,21 @@ p6_prefix=-2
 p6_prefix_when_specified=-2 
 p6_type=java.io.File
 p6_value=
+
 p7_MODE=
 p7_TYPE=Integer
-p7_default_value=
+p7_default_value=5
 p7_description=HISAT2 searches for up to N distinct, primary alignments for\neach read, where N equals the integer specified with this parameter.\nPrimary alignments mean alignments whose alignment score is equal or higher than any other alignments.\nIt is possible that multiple distinct alignments have the same score.\nThat is, if `2` is specified, HISAT2 will search for at most 2 distinct\nalignments. The alignment score for a paired-end alignment equals the sum of the\nalignment scores of the individual mates.  Each reported read or pair alignment\nbeyond the first has the SAM 'secondary' bit (which equals 256) set in its FLAGS\nfield.
 p7_fileFormat=
 p7_flag=-k 
 p7_name=max.n.primary.alignments
-p7_numValues=0..1
-p7_optional=on
-p7_prefix=-k 
-p7_prefix_when_specified=-k 
+p7_numValues=1..1
 p7_type=java.lang.Integer
 p7_value=
-p8_MODE=
-p8_TYPE=TEXT
-p8_default_value=\ 
-p8_description=Write paired-end reads that align concordantly at least once to a seperate fastq file
-p8_fileFormat=
-p8_flag=
-p8_name=write.unaligned.reads.to.separate.files
-p8_numValues=0..1
-p8_optional=
-p8_prefix=
-p8_prefix_when_specified=
-p8_type=java.lang.String
-p8_value=--un-conc-gz (--un-gz)\=yes; \=no
-p9_MODE=
-p9_TYPE=TEXT
-p9_default_value=\ 
-p9_description=Write paired-end reads that align concordantly at least once to separate fastq  file(s)
-p9_fileFormat=
-p9_flag=
-p9_name=write.aligned.reads.to.separate.files
-p9_numValues=0..1
-p9_optional=
-p9_prefix=
-p9_prefix_when_specified=
-p9_type=java.lang.String
-p9_value=--al-gz --al-conc-gz\=yes; \=no
+
+
+
+
 privacy=private
 quality=development
 taskDoc=
