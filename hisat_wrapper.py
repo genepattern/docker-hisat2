@@ -220,7 +220,7 @@ def setupHandlers():
                 "-ref.gap.extend.pen": nullOpt,
                 "-min.mismatch.penalty": mismatchPenFunc,
                 "-max.mismatch.penalty": nullOpt,
-
+                "--norc":justAFlagPassThrough,
                 }
     return handlers
 
@@ -242,9 +242,9 @@ def generate_command():
             if not handler == justAFlagPassThrough:
                 val = next(allargs, None)
                 argDict[key] = val
-                print("1. Arg is ->" + arg + "<- val ->"+ val )
+                print("1. Arg is ->" + str(arg) + "<- val ->"+ val )
             else:
-                print("  i.a  Arg is ->" + arg  + "<-  " )
+                print("  i.a  Arg is ->" + str(arg)  + "<-  " )
 
     print("CWD is " + os.getcwd())
     buff = StringIO()
