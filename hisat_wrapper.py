@@ -222,6 +222,7 @@ def setupHandlers():
                 "-max.mismatch.penalty": nullOpt,
                 "--norc":justAFlagPassThrough,
                 "--nofw":justAFlagPassThrough,
+                "--norc": justAFlagPassThrough
                 }
     return handlers
 

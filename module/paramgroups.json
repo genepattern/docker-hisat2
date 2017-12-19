@@ -1,30 +1,25 @@
 [{
-		"name": "Basic Parameters",
-		"parameters": ["index.dir", "index.file.prefix", "unpaired.input.fasta", "output.file.name", "reads.pair.1", "reads.pair.2"]
-	},
-        { 	"name":"Advanced Paired Alignment Parameters",
- 		"hidden":true,
-                "parameters": ["minimum.fragment.length.for.valid.paired-end.alignments", "maximum.fragment.length.for.valid.paired-end.alignments","disable.finding.alignments.for.individual.mates","disable.looking.for.discordant.alignments"]
+		"name": "Input",
+		"parameters": ["index", "reads.pair.1", "reads.pair.2", "input.format", "quality.value.scale", "integer.quality.value", "mate.orientations", "novel.splicesites.infile"]
 	},
 	{
-		"name": "Advanced Alignment Parameters",
+		"name": "Advanced Customization of run",
 		"hidden": true,
-		"parameters": ["max.n.primary.alignments", "write.unaligned.reads.to.separate.files", "write.aligned.reads.to.separate.files", "max.seeds",  "Ignore.quality.values", "skip.forward.strand", "skip.reverse.strand", "skip.first.n.reads.or.pairs", "stop.after.n.reads.or.pairs", "trim.5'.end", "trim.3'.end", "function.governing.minimum.alignment.score", "NCBI.sequence.read.archive.accessions"  ]
-	},
-        {
-		"name":"Advanced Spliced Alignment Parameters",
-		"hidden":true,
-		"parameters":["known.splicesite.infile", "penalty.for.canonical.splice.sites", "penalty.for.non-canonical.splice.sites", "Disable.spliced.alignment"]
+		"parameters": ["max.reads.to.align", "align", "min.mismatch.penalty", "max.mismatch.penalty", "soft.clipping", "min.softclip.penalty", "max.softclip.penalty", "min.n.ceil", "max.n.ceil", "Ambiguous.read.penalty", "read.gap.open.penalty", "read.gap.extend.penalty", "reference.gap.open.penalty", "reference.gap.extend.pen", "spliced.alignments", "penalty.for.canonical.splice.sites", "penalty.for.non-canonical.splice.sites", "min.score.align", "max.score.align", "minimum.fragment.length.for.paired.alignment", "maximum.fragment.length.for.paired.alignment", "unpaired.alignments.for.paired.reads", "discordant.alignments.for.paired.reads", "max.seeds.extended", "max.primary.alignments", "secondary.alignments"]
+	}, {
+		"name": "Parameters with default values for long mammalian introns",
+		"hidden": true,
+		"parameters": ["min.penalty.long.introns.with.canonical.splice.sites", "max.penalty.long.introns.with.canonical.splice.sites", "Minimum.intron.length", "Maximum.intron.length"]
 	},
 	{
-		"name": "Advanced Parameters with Values Tuned to Mammalian Genomes",
-		"parameters": ["penalty.function.for.long.introns.with.canonical.splice.sites", "penalty.function.for.long.introns.with.non-canonical.splice.sites", "Minimum.intron.length", "Maximum.intron.length"],
-		"hidden": true
+		"name": "Supplementary Output",
+		"hidden": true,
+		"parameters": ["novel.splicesites", "mapped.reads", "unmapped.reads"]
 	},
-        { 
-		"name":"Advanced Scoring Parameters",
-		"hidden":true,
-		"parameters": ["function.governing.maximum.number.of.ambiguous.characters", "Maximum.and.minimum.mismatch.penalty", "disallow.soft.clipping", "Maximum.and.minimum.soft.clipping.penalty", "Ambiguous.read.penalty", "read.gap.open.and.extend.penalties", "reference.gap.open.and.extend.penalties"]
+	{
+		"name": "Output",
+		"parameters": ["output.prefix"],
+		"hidden": false
 	}
 
 ]
