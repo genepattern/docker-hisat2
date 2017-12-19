@@ -90,7 +90,7 @@ def canonIntronPenFunc(args, buff, arg, argDict):
     next(args)
     min = argDict['-min_pen-canintronlen']
     max = argDict['-max_pen-canintronlen']
-    buff.write(unicode(" --pen-canonintronlen G,"))
+    buff.write(unicode(u" --pen-canonintronlen G,"))
    
     buff.write(unicode(str(min)) )
     buff.write(u",")
@@ -100,7 +100,7 @@ def noncanonIntronPenFunc(args, buff, arg, argDict):
     next(args)
     min = argDict['-min_pen-noncanintronlen']
     max = argDict['-max_pen-noncanintronlen']
-    buff.write(unicode(" --pen-noncanonintronlen G,"))
+    buff.write(unicode(u" --pen-noncanonintronlen G,"))
     buff.write(unicode(str(min)))
     buff.write(u"," )
     buff.write(unicode(str(max)) )
