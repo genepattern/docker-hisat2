@@ -79,11 +79,9 @@ def nCeilFunc(args, buff, arg, argDict):
 
 def scoreMinFunc(args, buff, arg, argDict):
     next(args)
-    min = argDict['-min_score_align']
-    max = argDict['-max_score_align']
+    min = argDict['-min.score.align']
+    max = argDict['-max.score.align']
     buff.write(u" --score-min L,")
-    buff.write(unicode(min ))
-    buff.write(u",")
     buff.write(unicode(min ))
     buff.write(u",")
     buff.write(unicode(max ))
@@ -92,19 +90,20 @@ def canonIntronPenFunc(args, buff, arg, argDict):
     next(args)
     min = argDict['-min_pen-canintronlen']
     max = argDict['-max_pen-canintronlen']
-    buff.write(" --pen-canonintronlen G,")
-    buff.write(unicode(min) )
+    buff.write(unicode(" --pen-canonintronlen G,"))
+   
+    buff.write(unicode(str(min)) )
     buff.write(u",")
-    buff.write(unicode(max))
+    buff.write(unicode(str(max)))
 
 def noncanonIntronPenFunc(args, buff, arg, argDict):
     next(args)
     min = argDict['-min_pen-noncanintronlen']
     max = argDict['-max_pen-noncanintronlen']
-    buff.write(" --pen-noncanonintronlen G,")
-    buff.write(unicode(min))
+    buff.write(unicode(" --pen-noncanonintronlen G,"))
+    buff.write(unicode(str(min)))
     buff.write(u"," )
-    buff.write(unicode(max) )
+    buff.write(unicode(str(max)) )
 
 def outputPrefix(args, buff, arg, argDict):
     val = next(args)
@@ -249,7 +248,7 @@ def generate_command():
             key = arg
             handler = handlers.get(arg, passThrough)
 
-            if not handler == justAFlagPassThrough:
+            if not ((handler == justAFlagPassThrough) or (handler == nullFlag)):
                 val = next(allargs, None)
                 argDict[key] = val
                 print("1. Arg is ->" + str(arg) + "<- val ->"+ val )
