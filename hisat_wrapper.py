@@ -180,8 +180,15 @@ def nullOpt(args, buff, arg, argDict):
     # this is for options that are present in the GP command line to this script
     # but get combined into a compound argument to hisat itself.  We don't want them to pass
     # through, they should just be dropped on the assumtion that another handler consumes them
-    # from the arg dict
+    # from the arg dict.
     next(args, None)
+
+def nullFlag(args, buff, arg, argDict):
+    # this is for flags used as placeholders that should not pass through to the actual hisat2 call.
+    # usually this is for a genepattern dropdown that we really want nothing in one case, but thats not
+    # an allowable value in a GenePattern selector
+    print('')
+
 #######################  END - these two are the catchall handler fuunctions ============
 
 
@@ -222,7 +229,8 @@ def setupHandlers():
                 "-max.mismatch.penalty": nullOpt,
                 "--norc":justAFlagPassThrough,
                 "--nofw":justAFlagPassThrough,
-                "--norc": justAFlagPassThrough
+                "--norc": justAFlagPassThrough,
+                "--WRAPPER_IGNORE": nullFlag
                 }
     return handlers
 
