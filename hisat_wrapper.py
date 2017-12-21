@@ -30,7 +30,8 @@ def rewriteIndex(args, buff, arg, argDict):
         zipOrDirPath = basename
     elif os.path.isdir(zipOrDirPath):
         # for directories we use the convention that the index name prefix is the same as the directory name
-        basename = basename
+        # basename = basename
+        basename="genome" # to match the ftp://gpftp.broadinstitute.org/module_support_files/hisat2/index/by_genome/
     else:
         raise ValueError("Index Problem: " + zipOrDirPath + " is neither a zip file nor a directory")
 
@@ -60,7 +61,7 @@ def softclipPenalty(args, buff, arg, argDict):
     next(args, None)
     min = argDict['-min_softclip_penalty']
     max = argDict['-max_softclip_penalty']
-    buff.write(u" -sp ")
+    buff.write(u" --sp ")
     buff.write(unicode(min))
     buff.write(u",")
     buff.write(unicode(max))
@@ -71,8 +72,6 @@ def nCeilFunc(args, buff, arg, argDict):
     min = argDict['-min_n_ceil']
     max = argDict['-max_n_ceil']
     buff.write(u" --n-ceil L,")
-    buff.write(unicode(min))
-    buff.write(u",")
     buff.write(unicode(min ))
     buff.write(u",")
     buff.write(unicode(max ))
@@ -90,7 +89,7 @@ def canonIntronPenFunc(args, buff, arg, argDict):
     next(args)
     min = argDict['-min_pen-canintronlen']
     max = argDict['-max_pen-canintronlen']
-    buff.write(unicode(u" --pen-canonintronlen G,"))
+    buff.write(unicode(u" --pen-intronlen G,"))
    
     buff.write(unicode(str(min)) )
     buff.write(u",")
@@ -100,7 +99,7 @@ def noncanonIntronPenFunc(args, buff, arg, argDict):
     next(args)
     min = argDict['-min_pen-noncanintronlen']
     max = argDict['-max_pen-noncanintronlen']
-    buff.write(unicode(u" --pen-noncanonintronlen G,"))
+    buff.write(unicode(u" --pen-noncanintronlen G,"))
     buff.write(unicode(str(min)))
     buff.write(u"," )
     buff.write(unicode(str(max)) )
@@ -150,12 +149,12 @@ def refGapPenFunc(args, buff, arg, argDict):
 
 def mismatchPenFunc(args, buff, arg, argDict):
     next(args)
-    x = argDict['-min.mismatch.penalty']
-    y = argDict['-max.mismatch.penalty']
+    minp = argDict['-min.mismatch.penalty']
+    maxp = argDict['-max.mismatch.penalty']
     buff.write(u" --mp ")
-    buff.write(unicode(x ))
+    buff.write(unicode(maxp ))
     buff.write(u",")
-    buff.write(unicode(y) )
+    buff.write(unicode(minp) )
 
 
 #######################   these two are the catchall handler fuunctions ============
@@ -229,9 +228,15 @@ def setupHandlers():
                 "--norc":justAFlagPassThrough,
                 "--nofw":justAFlagPassThrough,
                 "--norc": justAFlagPassThrough,
-                "--WRAPPER_IGNORE": nullFlag
+                "--WRAPPER_IGNORE": nullFlag,
+                "-WRAPPER_IGNORE": nullFlag,
+
+                ## below are ones that do not seem to match to the hisat2 doc but that VIB specified
+                ## these need to be examined more closely
+                "--max-seeds": nullOpt,
                 }
     return handlers
+
 
 
 def generate_command():
@@ -262,7 +267,6 @@ def generate_command():
     allargs = iter(sys.argv)
     next(allargs, None)  # strip off the script's name
     for arg in allargs:
-
         handler = handlers.get(arg, passThrough)
         handler(allargs, buff, arg, argDict)
         buff.write(u" ")
