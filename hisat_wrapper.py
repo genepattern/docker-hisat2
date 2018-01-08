@@ -3,10 +3,13 @@ from io import StringIO
 import os
 import zipfile
 import subprocess
+import shutil
 
 # work directly with sys.argv to avoid having to specify all the parameters that do not change but can just pass through
 # so we'l look at the args ourselves and only rewrite as necessary when we see an arg that is not
 # passed natively to the hisat call
+
+indexDirToDelete = None
 
 def rewriteIndex(args, buff, arg, argDict):
     # expect either a zip file or a dir,
@@ -17,9 +20,8 @@ def rewriteIndex(args, buff, arg, argDict):
     basename = os.path.splitext(os.path.basename(zipOrDirPath))[0]
 
     if os.path.isfile(zipOrDirPath):
-        if not zipOrDirPath.lower().endsWith(".zip"):
+        if not zipOrDirPath.lower().endswith(".zip"):
             print("This should be a zip file, extension is wrong..." + zipOrDirPath)
-
         # this should be created in os.getcwd() the current working directory which is fine
         os.mkdir(basename)
         # try to unzip
@@ -28,6 +30,7 @@ def rewriteIndex(args, buff, arg, argDict):
         zip_ref.extractall(basename)
         zip_ref.close()
         zipOrDirPath = basename
+        indexDirToDelete = basename
     elif os.path.isdir(zipOrDirPath):
         # for directories we use the convention that the index name prefix is the same as the directory name
         # basename = basename
@@ -282,4 +285,7 @@ if __name__ == '__main__':
     revised_command = generate_command()
     # now call it passing along the same environment we got
     subprocess.call(revised_command, shell=True, env=os.environ)
+
+    if not (indexDirToDelete == None):
+        shutil.rmtree(indexDirToDelete)
 
