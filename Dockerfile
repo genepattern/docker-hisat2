@@ -45,6 +45,7 @@ COPY runS3Batch_postrun_custom.sh /usr/local/bin/runS3Batch_postrun_custom.sh
 COPY extractIndexIfNecessary.py /usr/local/bin/extractIndexIfNecessary.py
 COPY hisat_wrapper.py /usr/local/bin/hisat_wrapper.py
 RUN cp -p /tmp/hisat2/hisat2_* /usr/local/bin
+RUN cp -p /tmp/hisat2/extract*.py /usr/local/bin
 
 ENV HISAT2_HOME /hisat2-2.1.0
 

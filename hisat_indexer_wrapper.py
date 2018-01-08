@@ -1,3 +1,5 @@
+# copyright 2017-2018 Regents of the University of California and the Broad Institute. All rights reserved.
+
 import sys
 from io import StringIO
 import os
@@ -6,7 +8,10 @@ import shutil
 import zipfile
 import glob
 
-indexBaseName = "";
+indexBaseName = ""
+dryRun = False
+vcf = False
+gtf = False
 
 def zipdir(path, ziph):
     # ziph is zipfile handle
@@ -50,20 +55,12 @@ def generate_command():
             buff.write(u" ")
             buff.write(unicode(val))
 
-    print("CWD is " + os.getcwd())
-    print("command is " + buff.getvalue())
+    if gtf:
+        buff.write(u" --ss ss.txt --exon exons.txt")
 
-    #allargs = iter(sys.argv)
-    #next(allargs, None)  # strip off the script's name
-    #for arg in allargs:
-    #    handler = handlers.get(arg, passThrough)
-    #    handler(allargs, buff, arg, argDict)
-    #    buff.write(u" ")
+    if vcf:
+        buff.write(u" --snp haplo.snp")
 
-
-
-    #print("\n THE GENERATED COMMAND LINE IS BELOW:\n")
-    #print(buff.getvalue())
     return buff.getvalue()
 
 def extractExons():
@@ -72,33 +69,48 @@ def extractExons():
     next(allargs)
     for arg in allargs:
         if arg.startswith('-gtf'):
+            gtf = True
             key = arg
             gtfFile = next(allargs, None)
 
-            command = "python /tmp/hisat2/hisat2_extract_splice_sites.py " + gtfFile
+            command1 = "python /tmp/hisat2/hisat2_extract_splice_sites.py > ss.txt" + gtfFile
+            command2 = "python /tmp/hisat2/hisat2_extract_exons.py > exons.txt " + gtfFile
+
             if dryRun:
-                print(command)
+                print(command1)
+                print("\n")
+                print(command2)
             else:
-                subprocess.call(command, shell=True, env=os.environ)
+                res1 = subprocess.call(command1, shell=True, env=os.environ)
+                res2 = subprocess.call(command2, shell=True, env=os.environ)
+
+
 
 def extractHaplotyoes():
     vcfFile = None
     allargs = iter(sys.argv)
     next(allargs)
+    argDict = {}
     for arg in allargs:
-        if arg.startswith('-vcf'):
-            key = arg
-            gtfFile = next(allargs, None)
+        val =  next(allargs, None)
+        argDict[key] = val
 
-            command = "python /tmp/hisat2/hisat2_extract_snps_haplotypes_VCF.py " + vcfFile
-            if dryRun:
-                print(command)
-            else:
-                subprocess.call(command, shell=True, env=os.environ)
+    vcfFile = argDict.get('-vcf', None)
+
+    if vcfFile is not None:
+        vcf = True
+        fasta = argDict.get('-fasta')
+
+        command = "python /tmp/hisat2/hisat2_extract_snps_haplotypes_VCF.py " + fasta + " " + vcfFile + " haplo "
+        if dryRun:
+            print(command)
+        else:
+            subprocess.call(command, shell=True, env=os.environ)
+
 
 
 if __name__ == '__main__':
-    dryRun = False
+
 
     allargs = iter(sys.argv)
     next(allargs)
@@ -114,7 +126,7 @@ if __name__ == '__main__':
     revised_command = generate_command()
     # now call it passing along the same environment we got
     if dryRun:
-        print(command)
+        print(revised_command)
     else:
         subprocess.call(revised_command, shell=True, env=os.environ)
 

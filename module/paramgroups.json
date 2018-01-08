@@ -18,7 +18,7 @@
 	},
 	{
 		"name": "Output",
-		"parameters": ["output.prefix"],
+		"parameters": ["output.prefix", "dry.run"],
 		"hidden": false
 	}
 

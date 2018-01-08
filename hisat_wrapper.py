@@ -1,3 +1,5 @@
+# copyright 2017-2018 Regents of the University of California and the Broad Institute. All rights reserved.
+
 import sys
 from io import StringIO
 import os
@@ -10,6 +12,7 @@ import shutil
 # passed natively to the hisat call
 
 indexDirToDelete = None
+dryRun = False
 
 def rewriteIndex(args, buff, arg, argDict):
     # expect either a zip file or a dir,
@@ -159,8 +162,12 @@ def mismatchPenFunc(args, buff, arg, argDict):
     buff.write(u",")
     buff.write(unicode(minp) )
 
+def dryRunFlag(args, buff, arg, argDict):
+    val = next(args, None)
+    if ("True" == val):
+        dryRun = True
 
-#######################   these two are the catchall handler fuunctions ============
+#######################   these are the catchall handler fuunctions ============
 def passThrough(args, buff, arg, argDict):
     val = next(args, None)
     buff.write(unicode(arg) )
@@ -233,6 +240,7 @@ def setupHandlers():
                 "--norc": justAFlagPassThrough,
                 "--WRAPPER_IGNORE": nullFlag,
                 "-WRAPPER_IGNORE": nullFlag,
+                "-dryRun": dryRunFlag,
 
                 ## below are ones that do not seem to match to the hisat2 doc but that VIB specified
                 ## these need to be examined more closely
@@ -259,11 +267,9 @@ def generate_command():
             if not ((handler == justAFlagPassThrough) or (handler == nullFlag)):
                 val = next(allargs, None)
                 argDict[key] = val
-                print("1. Arg is ->" + str(arg) + "<- val ->"+ val )
-            else:
-                print("  i.a  Arg is ->" + str(arg)  + "<-  " )
+                #print("1. Arg is ->" + str(arg) + "<- val ->"+ val )
 
-    print("CWD is " + os.getcwd())
+
     buff = StringIO()
     buff.write(u"hisat2 ")
 
@@ -274,17 +280,19 @@ def generate_command():
         handler(allargs, buff, arg, argDict)
         buff.write(u" ")
 
-        print("\n "+ buff.getvalue())
-
-    print("THE COMMAND LINE IS BELOW:\n")
-    print(buff.getvalue())
     return buff.getvalue()
 
 
+
 if __name__ == '__main__':
+
     revised_command = generate_command()
-    # now call it passing along the same environment we got
-    subprocess.call(revised_command, shell=True, env=os.environ)
+
+    if dryRun:
+        print(revised_command)
+    else:
+        # now call it passing along the same environment we got
+        subprocess.call(revised_command, shell=True, env=os.environ)
 
     if not (indexDirToDelete == None):
         shutil.rmtree(indexDirToDelete)
