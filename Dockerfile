@@ -52,5 +52,9 @@ ENV HISAT2_HOME /hisat2-2.1.0
 
 RUN chmod ugo+x /usr/local/bin/runS3OnBatch.sh /usr/local/bin/runLocal.sh 
 
+RUN apt-get update && \
+   apt-get install zip --yes
+
+
 CMD ["/usr/local/bin/runS3OnBatch.sh" ]
 

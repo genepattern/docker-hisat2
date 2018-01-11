@@ -93,7 +93,7 @@ def extractHaplotyoes():
     argDict = {}
     for arg in allargs:
         val =  next(allargs, None)
-        argDict[key] = val
+        argDict[arg] = val
 
     vcfFile = argDict.get('-vcf', None)
 
@@ -131,12 +131,13 @@ if __name__ == '__main__':
         subprocess.call(revised_command, shell=True, env=os.environ)
 
     # now zip up the current directory
-    zipf = zipfile.ZipFile(indexBaseName + '.zip', 'w', zipfile.ZIP_DEFLATED)
-    zipdir(os.getcwd(), zipf)
-    zipf.close()
+    #zipf = zipfile.ZipFile(indexBaseName + '.zip', 'w', zipfile.ZIP_DEFLATED)
+    #zipdir(os.getcwd(), zipf)
+    #zipf.close()
     # and remove the indexes
-    for f in glob.glob("*.ht2"):
-        os.remove(f)
+    #for f in glob.glob("*.ht2"):
+    #    os.remove(f)
+    subprocess.call("zip cvf genome.zip *.ht2", shell=True, env=os.environ)
 
 
 
