@@ -4,23 +4,17 @@ import sys
 from io import StringIO
 import os
 import subprocess
-import shutil
-import zipfile
-import glob
+import time
 
-indexBaseName = ""
+
+
+indexBaseName = "genome"
 dryRun = False
 vcf = False
 gtf = False
 
-def zipdir(path, ziph):
-    # ziph is zipfile handle
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            ziph.write(os.path.join(root, file))
-
 def generate_command():
-
+    global indexBaseName
     buff = StringIO()
     buff.write(u"hisat2-build ")
 
@@ -52,18 +46,22 @@ def generate_command():
             key = arg
             val = next(allargs, None)
             indexBaseName = val
+            print("Index base name is " + indexBaseName)
             buff.write(u" ")
             buff.write(unicode(val))
 
     if gtf:
+        print("including exons")
         buff.write(u" --ss ss.txt --exon exons.txt")
 
     if vcf:
+        print("including haplotypes")
         buff.write(u" --snp haplo.snp")
 
     return buff.getvalue()
 
 def extractExons():
+    global gtf
     gtfFile = None
     allargs = iter(sys.argv)
     next(allargs)
@@ -87,6 +85,7 @@ def extractExons():
 
 
 def extractHaplotyoes():
+    global vcf
     vcfFile = None
     allargs = iter(sys.argv)
     next(allargs)
@@ -111,7 +110,6 @@ def extractHaplotyoes():
 
 if __name__ == '__main__':
 
-
     allargs = iter(sys.argv)
     next(allargs)
     for arg in allargs:
@@ -119,6 +117,7 @@ if __name__ == '__main__':
             val = next(allargs, None)
             if ("True" == val):
                 dryRun = True
+
 
     extractExons()
     extractHaplotyoes()
@@ -130,14 +129,9 @@ if __name__ == '__main__':
     else:
         subprocess.call(revised_command, shell=True, env=os.environ)
 
-    # now zip up the current directory
-    #zipf = zipfile.ZipFile(indexBaseName + '.zip', 'w', zipfile.ZIP_DEFLATED)
-    #zipdir(os.getcwd(), zipf)
-    #zipf.close()
-    # and remove the indexes
-    #for f in glob.glob("*.ht2"):
-    #    os.remove(f)
-    subprocess.call("zip cvf genome.zip *.ht2", shell=True, env=os.environ)
+    subprocess.call("zip "+indexBaseName+".zip *.ht2", shell=True, env=os.environ)
+
+    subprocess.call("rm *.ht2", shell=True, env=os.environ)
 
 
 

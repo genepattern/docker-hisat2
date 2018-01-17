@@ -49,16 +49,41 @@ def rewriteIndex(args, buff, arg, argDict):
 
 
 
+def readFileList(fileList):
+    files =[]
+
+    fileReader = open(fileList, 'r')
+    for line in fileReader:
+        line = line.rstrip('\n')
+        line = line.strip()
+        result = line.split('\t')
+        if len(result) >= 1:
+            filepath = result[0]
+            assert os.path.exists(filepath), 'File does not exist: ' + filepath
+
+            #if it is a directory then get all the files in that directory
+            if os.path.isdir(filepath):
+                subFiles = [os.path.join(filepath,fName) for fName in next(os.walk(filepath))[2]]
+                subFiles.sort()
+                files += subFiles
+            else:
+                files.append(filepath)
+    return ','.join(files)
+
 
 def readPairs(args, buff, arg, argDict):
     # look to see if we got -1 and -2, and if so write them.  If not we
     # only got -1 so we write it as -U with the next value
-    readpairs_1 = next(args)
+    readpairs_1 = readFileList(next(args))
+
+
     if ("-2" in argDict):
+        readpairs_2 = readFileList(unicode(argDict['-2']))
+
         buff.write(u" -1 ")
         buff.write(unicode(readpairs_1))
         buff.write(u" -2 ")
-        buff.write(unicode(argDict['-2']))
+        buff.write(unicode(readpairs_2))
     else:
         buff.write(u" -U ")
         buff.write(unicode(readpairs_1))
@@ -114,8 +139,7 @@ def outputPrefix(args, buff, arg, argDict):
     val = next(args)
     buff.write(u" -S ")
     buff.write(unicode(val ))
-    if not val.lower().endswith(".sam"):
-        buff.write(u".sam")
+    buff.write(u".sam")
 
 def mappedReads(args, buff, arg, argDict):
     if ("-2" in argDict):
