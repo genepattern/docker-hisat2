@@ -51,8 +51,13 @@ def generate_command():
             buff.write(unicode(val))
 
     if gtf:
-        print("including exons")
-        buff.write(u" --ss ss.txt --exon exons.txt")
+        print("Including exons and splice sites from gtf file (if any).")
+        if os.path.exists("ss.txt"):
+            buff.write(u" --ss ss.txt ")
+        if os.path.exists("exons.txt"):
+            buff.write(u" --exon exons.txt ")
+
+
 
     if vcf:
         print("including haplotypes")
@@ -71,7 +76,7 @@ def extractExons():
             key = arg
             gtfFile = next(allargs, None)
 
-            command1 = "python /tmp/hisat2/hisat2_extract_splice_sites.py > ss.txt" + gtfFile
+            command1 = "python /tmp/hisat2/hisat2_extract_splice_sites.py > ss.txt " + gtfFile
             command2 = "python /tmp/hisat2/hisat2_extract_exons.py > exons.txt " + gtfFile
 
             if dryRun:
@@ -132,6 +137,14 @@ if __name__ == '__main__':
     subprocess.call("zip "+indexBaseName+".zip *.ht2", shell=True, env=os.environ)
 
     subprocess.call("rm *.ht2", shell=True, env=os.environ)
+    if os.path.exists("ss.txt"):
+        subprocess.call("rm ss.txt", shell=True, env=os.environ)
+    if os.path.exists("exons.txt"):
+        subprocess.call("rm exons.txt", shell=True, env=os.environ)
+
+
+
+
 
 
 

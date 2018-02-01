@@ -15,6 +15,8 @@ indexDirToDelete = None
 dryRun = False
 
 def rewriteIndex(args, buff, arg, argDict):
+    global indexDirToDelete
+
     # expect either a zip file or a dir,
     # if a zip, unzip it to a dir of the same name
     # The dirname is the prefix as seen by hisat
@@ -40,6 +42,7 @@ def rewriteIndex(args, buff, arg, argDict):
         basename="genome" # to match the ftp://gpftp.broadinstitute.org/module_support_files/hisat2/index/by_genome/
     else:
         raise ValueError("Index Problem: " + zipOrDirPath + " is neither a zip file nor a directory")
+
 
     # else its a dir
     buff.write(u"-x ")
@@ -93,9 +96,9 @@ def softclipPenalty(args, buff, arg, argDict):
     min = argDict['-min_softclip_penalty']
     max = argDict['-max_softclip_penalty']
     buff.write(u" --sp ")
-    buff.write(unicode(min))
-    buff.write(u",")
     buff.write(unicode(max))
+    buff.write(u",")
+    buff.write(unicode(min))
 
 
 def nCeilFunc(args, buff, arg, argDict):
@@ -120,7 +123,7 @@ def canonIntronPenFunc(args, buff, arg, argDict):
     next(args)
     min = argDict['-min_pen-canintronlen']
     max = argDict['-max_pen-canintronlen']
-    buff.write(unicode(u" --pen-intronlen G,"))
+    buff.write(unicode(u" --pen-canintronlen G,"))
    
     buff.write(unicode(str(min)) )
     buff.write(u",")
@@ -197,14 +200,14 @@ def passThrough(args, buff, arg, argDict):
     buff.write(unicode(arg) )
     buff.write(u" ")
     buff.write(unicode(val) )
-    print("passthrough on: " + str(arg) + "  with val " + str(val))
+    #print("passthrough on: " + str(arg) + "  with val " + str(val))
 
 
 def justAFlagPassThrough(args, buff, arg, argDict):
     # don't do anything to the argument but in this case its just a flag with no value following it
     buff.write(unicode(arg) )
     buff.write(u" ")
-    print("just a flag on: "+ arg)
+    #print("just a flag on: "+ arg)
 
 
 
@@ -243,9 +246,13 @@ def setupHandlers():
                 "-S": outputPrefix,
                 "--int-quals": justAFlagPassThrough,
                 "-f":  justAFlagPassThrough,
+                "-p":  passThrough,
                 "--fr": justAFlagPassThrough,
                 "--rf": justAFlagPassThrough,
                 "--ff": justAFlagPassThrough,
+                "--phred33": justAFlagPassThrough,
+                "--phred64": justAFlagPassThrough,
+                "--solexa-quals": justAFlagPassThrough,
                 "--ignore-quals": justAFlagPassThrough,
                 "--no-mixed": justAFlagPassThrough,
                 "--no-discordant": justAFlagPassThrough,
@@ -268,7 +275,7 @@ def setupHandlers():
 
                 ## below are ones that do not seem to match to the hisat2 doc but that VIB specified
                 ## these need to be examined more closely
-                "--max-seeds": nullOpt,
+                #"--max-seeds": nullOpt,
                 }
     return handlers
 
@@ -301,8 +308,10 @@ def generate_command():
     next(allargs, None)  # strip off the script's name
     for arg in allargs:
         handler = handlers.get(arg, passThrough)
+        #print("arg is " + arg)
         handler(allargs, buff, arg, argDict)
         buff.write(u" ")
+        #print("        buff is now " + buff.getvalue())
 
     return buff.getvalue()
 
@@ -315,6 +324,8 @@ if __name__ == '__main__':
     if dryRun:
         print(revised_command)
     else:
+        # print command line to stdout for debugging
+        print(revised_command)
         # now call it passing along the same environment we got
         subprocess.call(revised_command, shell=True, env=os.environ)
 
