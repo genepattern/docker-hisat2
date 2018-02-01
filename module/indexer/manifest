@@ -1,7 +1,7 @@
 #Hisat2Indexer
 #Thu Feb 01 19:27:22 UTC 2018
 JVMLevel=
-LSID=urn\:lsid\:8080.gpserver.ip-172-31-26-71.ip-172-31-26-71.ec2.internal\:genepatternmodules\:27\:61
+LSID=LSID=urn\:lsid\:broad.mit.edu\:cancer.software.genepattern.module.analysis\:00367\:0.61
 author=Ted Liefeld;UCSD
 categories=RNA-Seq
 commandLine=python <libdir>/hisat_indexer_wrapper.py  <gtf.file>   -fasta <fasta.file> -indexname <index.name>  -dryRun <dry.run>
