@@ -1,0 +1,19 @@
+#
+# Example run of CopyNumberInferencePipeline, as run on the gpprod server, 
+# circa the public release of v1.
+# ant -f ${GPUNIT_HOME}/build.xml -Dgpunit.diffStripTrailingCR="--strip-trailing-cr" -Dgp.host="gp-beta-ami.genepattern.org" -Dgp.url="https://gp-beta-ami.genepattern.org" -Dgp.user="ted" -Dgp.password="" -Dgpunit.testfolder=`pwd` gpunit
+# It took about 2 hrs 10 min to run.
+#
+name: testHisat2Aligner_double_zip
+module: Hisat2Aligner
+params: 
+    "reads.pair.1": https://datasets.genepattern.org/data/test_data/Hisat2/reads_1.fa 
+    "reads.pair.2": https://datasets.genepattern.org/data/test_data/Hisat2/reads_2.fa
+    "index": https://datasets.genepattern.org/data/test_data/Hisat2/22_20-21M_snp.zip
+    "input.format": fastA
+    "output.prefix": mapped
+assertions:
+    diffCmd: ./difftail.sh
+    files:
+        mapped.sam:
+            diff: ./expected_outputs/mapped.twosided.sam
