@@ -1,7 +1,8 @@
+#Mon, 12 Feb 2018 11:24:10 -0800
 #Hisat2Indexer
 #Thu Feb 01 19:27:22 UTC 2018
 JVMLevel=
-LSID=LSID=urn\:lsid\:broad.mit.edu\:cancer.software.genepattern.module.analysis\:00367\:0.61
+LSID=urn\:lsid\:broad.mit.edu\:cancer.software.genepattern.module.analysis\:00368\:999999999
 author=Ted Liefeld;UCSD
 categories=RNA-Seq
 commandLine=python <libdir>/hisat_indexer_wrapper.py  <gtf.file>   -fasta <fasta.file> -indexname <index.name>  -dryRun <dry.run>
@@ -64,8 +65,10 @@ p4_prefix_when_specified=
 p4_type=java.lang.String
 p4_value=True\=True;False\=False
 privacy=public
-quality=development
+quality=${quality.level}
 taskDoc=
 taskType=RNA-Seq
 userid=ted
 version=
+
+publicationDate=02/12/2018 11\:24 
