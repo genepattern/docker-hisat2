@@ -2,7 +2,7 @@
 #Hisat2Aligner
 #Fri Feb 02 21:20:19 UTC 2018
 JVMLevel=
-taskDoc=http://software.broadinstitute.org/cancer/software/genepattern/modules/docs/Hisat2Aligner/1
+taskDoc=doc.html
 LSID=urn\:lsid\:broad.mit.edu\:cancer.software.genepattern.module.analysis\:00367\:999999999
 author=Ted Liefeld;UCSD
 categories=Sequence Analysis
