@@ -2,5 +2,5 @@
 
 . runAlignerWrapperConfig.sh
 
-. ../common/testing_scripts/runLocal.sh
+. ../container/common/testing_scripts/runLocal.sh
 
