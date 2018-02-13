@@ -10,6 +10,7 @@ cpuType=any
 description=Indexes one or more Fasta files for use in the hista2 aligner.  
 fileFormat=
 language=any
+job.docker.image=genepattern/docker-hisat2:v0.12
 name=Hisat2Indexer
 os=any
 p1_MODE=

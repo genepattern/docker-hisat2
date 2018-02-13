@@ -10,6 +10,7 @@ cpuType=any
 description=Hisat2 Aligner, This module is in beta test.  Please notify jliefeld at cloud.ucsd.edu with any issues that you experience
 fileFormat=sam
 language=any
+job.docker.image=genepattern/docker-hisat2:v0.12
 name=Hisat2Aligner
 os=any
 p10_MODE=
