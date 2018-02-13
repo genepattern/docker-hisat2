@@ -68,7 +68,6 @@ p4_type=java.lang.String
 p4_value=True\=True;False\=False
 privacy=public
 quality=${quality.level}
-taskDoc=
 taskType=RNA-Seq
 userid=ted
 version=
