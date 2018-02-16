@@ -2,6 +2,7 @@
 #Hisat2Aligner
 #Fri Feb 02 21:20:19 UTC 2018
 JVMLevel=
+taskDoc=doc.html
 LSID=urn\:lsid\:broad.mit.edu\:cancer.software.genepattern.module.analysis\:00367\:999999999
 author=Ted Liefeld;UCSD
 categories=Sequence Analysis
@@ -614,10 +615,8 @@ p9_prefix_when_specified=
 p9_type=java.lang.Integer
 p9_value=
 privacy=public
-quality=${quality.level}
-taskDoc=
+quality=preproduction
 taskType=Sequence Analysis
 userid=ted
 version=VIB Updates
-
 publicationDate=02/12/2018 11\:19 

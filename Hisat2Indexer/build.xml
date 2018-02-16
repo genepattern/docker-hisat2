@@ -26,7 +26,7 @@
   THE SOFTWARE.
 -->
 
-<project basedir="" default="devReleaseModule" name="Hisat2Aligner">
+<project basedir="" default="devReleaseModule" name="Hisat2Indexer">
 
     <target name="init">
         <tstamp />
@@ -67,8 +67,8 @@
     </target>
 
     <target name="create-zip" depends="addLSIDtoManifest">
-        <zip destfile="${dest.dir}/${ant.project.name}_v${full.version}.zip" whenempty="fail" defaultexcludes="true">
-            <fileset dir="." includes="*.py, *.json, manifest, *.txt"/>
+        <zip destfile="${dest.dir}/${ant.project.name}.zip" whenempty="fail" defaultexcludes="true">
+            <fileset dir="." includes="*.html, *.py, *.json, manifest, *.txt"/>
         </zip>
     </target>
 	

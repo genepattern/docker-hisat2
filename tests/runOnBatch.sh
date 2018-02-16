@@ -2,5 +2,5 @@
 
 
 . runConfig.sh
-. ../../common/testing_scripts/runOnBatch.sh
+. ../container/common/testing_scripts/runOnBatch.sh
 

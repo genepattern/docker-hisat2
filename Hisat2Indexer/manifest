@@ -1,6 +1,7 @@
 #Mon, 12 Feb 2018 11:24:10 -0800
 #Hisat2Indexer
 #Thu Feb 01 19:27:22 UTC 2018
+taskDoc=doc.html
 JVMLevel=
 LSID=urn\:lsid\:broad.mit.edu\:cancer.software.genepattern.module.analysis\:00368\:999999999
 author=Ted Liefeld;UCSD
@@ -67,7 +68,6 @@ p4_type=java.lang.String
 p4_value=True\=True;False\=False
 privacy=public
 quality=${quality.level}
-taskDoc=
 taskType=RNA-Seq
 userid=ted
 version=
