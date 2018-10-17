@@ -1,9 +1,9 @@
-#Mon, 12 Feb 2018 11:24:10 -0800
+#Wed, 17 Oct 2018 10:05:15 -0700
 #Hisat2Indexer
 #Thu Feb 01 19:27:22 UTC 2018
 taskDoc=doc.html
 JVMLevel=
-LSID=urn\:lsid\:broad.mit.edu\:cancer.software.genepattern.module.analysis\:00368\:999999999
+LSID=urn\:lsid\:broad.mit.edu\:cancer.software.genepattern.module.analysis\:00368\:0.24
 author=Ted Liefeld;UCSD
 categories=RNA-Seq
 commandLine=python <libdir>/hisat_indexer_wrapper.py  <gtf.file>   -fasta <fasta.file> -indexname <index.name>  -dryRun <dry.run>
@@ -11,7 +11,7 @@ cpuType=any
 description=Indexes one or more Fasta files for use in the hista2 aligner.  
 fileFormat=
 language=any
-job.docker.image=genepattern/docker-hisat2:v0.12
+job.docker.image=genepattern/docker-hisat2\:v0.12
 name=Hisat2Indexer
 os=any
 p1_MODE=
@@ -72,4 +72,4 @@ taskType=RNA-Seq
 userid=ted
 version=
 
-publicationDate=02/12/2018 11\:24 
+publicationDate=10/17/2018 10\:05 

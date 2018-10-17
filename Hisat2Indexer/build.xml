@@ -71,6 +71,13 @@
             <fileset dir="." includes="*.html, *.py, *.json, manifest, *.txt"/>
         </zip>
     </target>
+
+    <target name="create-zip-2" depends="">
+        <zip destfile="${ant.project.name}.zip" whenempty="fail" defaultexcludes="true">
+            <fileset dir="." includes="*.html, *.py, *.json, manifest, *.txt"/>
+        </zip>
+    </target>
+
 	
     <target name="devReleaseModule" depends="init_devrelease,load-release-props,create-zip,resetManifest" />
 
