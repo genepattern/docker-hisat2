@@ -5,6 +5,7 @@ from io import StringIO
 import os
 import zipfile
 import subprocess
+from subprocess import PIPE, STDOUT
 import shutil
 
 # work directly with sys.argv to avoid having to specify all the parameters that do not change but can just pass through
@@ -327,7 +328,20 @@ if __name__ == '__main__':
         # print command line to stdout for debugging
         print(revised_command)
         # now call it passing along the same environment we got
-        subprocess.call(revised_command, shell=True, env=os.environ)
+        childProcess = subprocess.Popen(revised_command, shell=True, env=os.environ, stdout=PIPE, stderr=PIPE)
+        stdout, stderr = childProcess.communicate()
+        retval = childProcess.returncode
+        if (retval != 0):
+                # if non-zero return, print stderr to stderr
+                print( stdout ) 
+                print  >> sys.stderr, stderr
+        else:
+                # if not a non-zero stdout, print stderr to stdout since Hisat2Indexer logs non-error
+                # stuff to stderr.  Downside is the stderr and stdout are not interlevened
+                print(stdout)
+                print(stderr)
+
+
 
     if not (indexDirToDelete == None):
         shutil.rmtree(indexDirToDelete)
